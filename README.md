@@ -140,6 +140,6 @@ This project is licensed under the MIT License - see the [LICENSE](https://www.g
 
 ## 🛸 Credits
 
-This project was built using **Antigravity** and **Gemini 3**.
+This project was built as a **vibecoding** test using **[Antigravity](https://antigravity.google)**, Google's advanced agentic IDE, and powered by **[Gemini 3 Pro](https://deepmind.google/technologies/gemini/Pro)**.
 
 Conducted by **Henry Hamon** ([@henryhamon](https://github.com/henryhamon)).
