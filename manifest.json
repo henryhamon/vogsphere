@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Vogsphere: The Bureaucratic Second Brain",
+  "version": "1.0",
+  "description": "Extracts web content, executes LLM agents, and generates strict Zettelkasten notes for Obsidian.",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "side_panel": {
+    "default_path": "src/sidepanel.html"
+  },
+  "action": {
+    "default_title": "Open Vogsphere"
+  },
+  "icons": {
+    "128": "icons/icon.png"
+  }
+}
