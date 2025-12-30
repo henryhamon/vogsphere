@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Vogsphere Node</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>VOGSPHERE <span style="font-size:0.6em">V.1.1</span></h1>
+      <div class="settings-toggle" id="btnSettings" title="Configuration">⚙️</div>
+    </header>
+
+    <div id="settingsPanel" class="hidden">
+      <h3 class="settings-header">Connection Settings</h3>
+
+      <label>Provider Template:</label>
+      <select id="providerPreset">
+        <option value="openai">OpenAI</option>
+        <option value="ollama">Ollama (Local)</option>
+        <option value="litellm">LiteLLM (Proxy)</option>
+        <option value="custom">Custom Endpoint</option>
+      </select>
+
+      <label>Base URL:</label>
+      <input type="text" id="baseUrl" placeholder="https://api.openai.com/v1">
+
+      <label>Model Name:</label>
+      <input type="text" id="modelName" placeholder="gpt-4o-mini">
+
+      <label>API Key:</label>
+      <input type="password" id="apiKey" placeholder="sk-...">
+
+      <h3 class="settings-header">Agent Preferences</h3>
+
+      <label>Output Language:</label>
+      <select id="targetLanguage">
+        <option value="English">English</option>
+        <option value="Portuguese">Portuguese</option>
+        <option value="Spanish">Spanish</option>
+        <option value="French">French</option>
+        <option value="German">German</option>
+        <option value="Italian">Italian</option>
+        <option value="Japanese">Japanese</option>
+      </select>
+
+      <button id="saveSettings" class="primary-btn">Save Configuration</button>
+    </div>
+
+    <div class="actions">
+      <button id="btnProcess" class="primary-btn">PROCESS CURRENT PAGE</button>
+    </div>
+
+    <div id="status" class="status">Waiting for input...</div>
+
+    <div id="resultArea" class="hidden">
+      <textarea id="markdownOutput" readonly></textarea>
+      <div class="button-group">
+        <button id="btnCopy">Copy</button>
+        <button id="btnDownload">Save .md</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="sidepanel.js"></script>
+</body>
+
+</html>

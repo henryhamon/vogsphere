@@ -1,0 +1,98 @@
+/* Add inside sidepanel.css */
+.settings-header {
+  font-size: 0.9rem;
+  color: #00ff9d;
+  text-transform: uppercase;
+  border-bottom: 1px solid #444;
+  padding-bottom: 5px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #202020;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 15px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #4a4a4a;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  margin: 0;
+  color: #00ff9d;
+}
+
+.hidden {
+  display: none;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  background: #333;
+  border: 1px solid #555;
+  color: white;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+
+textarea {
+  height: 400px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+button {
+  background: #444;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #555;
+}
+
+.primary-btn {
+  background: #00ff9d;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.primary-btn:hover {
+  background: #00cc7a;
+}
+
+.status {
+  font-size: 0.8rem;
+  color: #888;
+  text-align: center;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
