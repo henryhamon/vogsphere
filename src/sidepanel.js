@@ -5,7 +5,9 @@ import { downloadMarkdown } from './utils.js';
 const DEFAULTS = {
   openai: { url: 'https://api.openai.com/v1', model: 'gpt-4o-mini' },
   ollama: { url: 'http://localhost:11434/v1', model: 'llama3' },
-  litellm: { url: 'http://localhost:4000', model: 'gpt-3.5-turbo' }, // LiteLLM default port
+  gemini: { url: 'https://generativelanguage.googleapis.com/v1beta/openai', model: 'gemini-1.5-flash' },
+  grok: { url: 'https://api.x.ai/v1', model: 'grok-beta' },
+  claude: { url: 'https://api.anthropic.com/v1/messages', model: 'claude-3-5-sonnet-20240620' },
   custom: { url: '', model: '' }
 };
 
@@ -16,10 +18,32 @@ document.addEventListener('DOMContentLoaded', async () => {
   ]);
 
   if (data.apiKey) document.getElementById('apiKey').value = data.apiKey;
-  if (data.baseUrl) document.getElementById('baseUrl').value = data.baseUrl;
-  if (data.modelName) document.getElementById('modelName').value = data.modelName;
   if (data.targetLanguage) document.getElementById('targetLanguage').value = data.targetLanguage;
-  if (data.providerPreset) document.getElementById('providerPreset').value = data.providerPreset;
+
+  // Handle Legacy/Deprecated Presets
+  let currentPreset = data.providerPreset || 'ollama';
+  if (!DEFAULTS[currentPreset]) {
+    // If the saved preset (e.g., 'litellm') no longer exists in DEFAULTS, force reset to 'ollama'
+    currentPreset = 'ollama';
+    console.log('[Vogsphere] Migrating legacy preset to Ollama default.');
+
+    // Apply defaults immediately
+    document.getElementById('baseUrl').value = DEFAULTS.ollama.url;
+    document.getElementById('modelName').value = DEFAULTS.ollama.model;
+    document.getElementById('providerPreset').value = 'ollama';
+
+    // Save the migration
+    chrome.storage.local.set({
+      providerPreset: 'ollama',
+      baseUrl: DEFAULTS.ollama.url,
+      modelName: DEFAULTS.ollama.model
+    });
+  } else {
+    // Load normally
+    document.getElementById('providerPreset').value = currentPreset;
+    if (data.baseUrl) document.getElementById('baseUrl').value = data.baseUrl;
+    if (data.modelName) document.getElementById('modelName').value = data.modelName;
+  }
 
   // Preset Change Handler
   document.getElementById('providerPreset').addEventListener('change', (e) => {

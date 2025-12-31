@@ -1,0 +1,18 @@
+{
+  "name": "vogsphere-extension",
+  "version": "1.0.0",
+  "description": "Vogsphere: The Bureaucratic Second Brain",
+  "main": "src/background.js",
+  "scripts": {
+    "start": "echo \"\n🚀 TO RUN VOGSPHERE:\n-------------------\n1. Open Chrome (chrome://extensions)\n2. Enable 'Developer Mode' (top right)\n3. Click 'Load Unpacked'\n4. Select this folder: ${PWD}\n\""
+  },
+  "keywords": [
+    "chrome-extension",
+    "agents",
+    "llm",
+    "obsidian"
+  ],
+  "author": "Henry Hamon",
+  "license": "MIT",
+  "dependencies": {}
+}

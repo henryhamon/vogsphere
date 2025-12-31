@@ -113,13 +113,30 @@ export const Agents = {
 
     // 3. API Execution
     try {
-      const headers = { 'Content-Type': 'application/json' };
-      if (config.apiKey) headers['Authorization'] = `Bearer ${config.apiKey}`;
+      console.log(`[Vogsphere] Connecting to: ${baseUrl} with model: ${model}`);
 
-      const response = await fetch(baseUrl, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({
+      let body, method = 'POST';
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+
+      if (config.providerPreset === 'claude') {
+        // Anthropic Adapter
+        headers['x-api-key'] = config.apiKey;
+        headers['anthropic-version'] = '2023-06-01';
+
+        body = JSON.stringify({
+          model: model,
+          system: this.systemPrompt,
+          messages: [{ role: "user", content: prompt }],
+          max_tokens: 4096,
+          temperature: 0.3
+        });
+      } else {
+        // Standard OpenAI / Ollama Adapter
+        if (config.apiKey) headers['Authorization'] = `Bearer ${config.apiKey}`;
+
+        body = JSON.stringify({
           model: model,
           messages: [
             { role: "system", content: this.systemPrompt },
@@ -127,19 +144,36 @@ export const Agents = {
           ],
           temperature: 0.3,
           stream: false
-        })
+        });
+      }
+
+      const response = await fetch(baseUrl, {
+        method: method,
+        headers: headers,
+        body: body
       });
 
       if (!response.ok) {
-        const err = await response.text();
-        throw new Error(`Agent Connection Error: ${err}`);
+        let errText = "";
+        try {
+          errText = await response.text();
+        } catch (e) {
+          errText = "Could not read error body";
+        }
+        throw new Error(`Agent Connection Error (${response.status} ${response.statusText}): ${errText}`);
       }
 
       const data = await response.json();
 
       // Handle standard OpenAI format or Ollama/LiteLLM variations
+      // Handle standard OpenAI format or Ollama/LiteLLM variations
       if (data.choices && data.choices.length > 0) return data.choices[0].message.content;
       if (data.message) return data.message.content;
+
+      // Handle Anthropic Format
+      if (data.content && Array.isArray(data.content) && data.content.length > 0) {
+        return data.content[0].text;
+      }
 
       throw new Error("Invalid response structure from provider.");
 

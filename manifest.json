@@ -19,9 +19,16 @@
     "default_path": "src/sidepanel.html"
   },
   "action": {
-    "default_title": "Open Vogsphere"
+    "default_title": "Open Vogsphere",
+    "default_icon": {
+      "16": "icons/icon.png",
+      "48": "icons/icon.png",
+      "128": "icons/icon.png"
+    }
   },
   "icons": {
+    "16": "icons/icon.png",
+    "48": "icons/icon.png",
     "128": "icons/icon.png"
   }
 }

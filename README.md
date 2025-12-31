@@ -12,8 +12,8 @@ Designed for users of **LiteLLM**, **Ollama**, and **OpenAI**.
 * **Distraction-Free Extraction**: Uses a custom implementation of Mozilla's `Readability.js` to strip ads, popups, and clutter.
 * **Universal LLM Support**:
 * 🏠 **Local**: Connect to **Ollama** directly.
-* 🌐 **Cloud**: Connect to **OpenAI** (GPT-4o, etc.).
-* 🚀 **Proxy**: Native support for **LiteLLM** (Anthropic, Azure, Vertex, etc.).
+* 🌐 **Cloud**: Native support for **OpenAI**, **Gemini**, **Claude**, and **Grok**.
+* 🚀 **Proxy**: Compatible with **LiteLLM** via Custom endpoint.
 
 
 * **Multi-Agent Architecture**: Four specialized "cognitive agents" run in parallel to process information:
@@ -80,7 +80,9 @@ Click the Vogsphere icon in your browser toolbar to open the Side Panel. Click t
 | --- | --- | --- |
 | **OpenAI** | `https://api.openai.com/v1` | `gpt-4o-mini` |
 | **Ollama** | `http://localhost:11434/v1` | `llama3`, `mistral` |
-| **LiteLLM** | `http://localhost:4000` | `gpt-3.5-turbo` |
+| **Google Gemini** | `https://generativelanguage.googleapis.../openai` | `gemini-1.5-flash` |
+| **Anthropic Claude** | `https://api.anthropic.com/v1/messages` | `claude-3-5-sonnet` |
+| **xAI Grok** | `https://api.x.ai/v1` | `grok-beta` |
 
 *Note: If using Ollama, ensure you have run `ollama serve` and configured CORS if necessary.*
 
