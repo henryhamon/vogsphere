@@ -4,7 +4,7 @@
 
 **Vogsphere** is a Chrome Extension designed to serve as a rigorous "Second Brain" ingestion tool. It runs entirely in your browser (client-side), extracting messy web content and submitting it to a council of AI Agents that return strictly formatted **Zettelkasten** notes for **Obsidian**.
 
-Designed for users of **LiteLLM**, **Ollama**, and **OpenAI**.
+Designed for users of **Gemini**, **Claude**, **Grok**, **Ollama**, and **OpenAI**.
 
 ## ✨ Features
 
@@ -13,8 +13,6 @@ Designed for users of **LiteLLM**, **Ollama**, and **OpenAI**.
 * **Universal LLM Support**:
 * 🏠 **Local**: Connect to **Ollama** directly.
 * 🌐 **Cloud**: Native support for **OpenAI**, **Gemini**, **Claude**, and **Grok**.
-* 🚀 **Proxy**: Compatible with **LiteLLM** via Custom endpoint.
-
 
 * **Multi-Agent Architecture**: Four specialized "cognitive agents" run in parallel to process information:
 1. **Summarizer Agent**: Generates accessible academic abstracts.
@@ -46,12 +44,11 @@ vogsphere/
 ### Prerequisites
 
 * Google Chrome (or Chromium-based browser like Brave/Edge).
-* Access to an LLM provider (OpenAI API Key OR running instance of Ollama/LiteLLM).
 
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/vogsphere.git
+git clone https://github.com/henryhamon/vogsphere.git
 cd vogsphere
 
 ```
