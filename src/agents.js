@@ -134,7 +134,10 @@ export const Agents = {
         });
       } else {
         // Standard OpenAI / Ollama Adapter
-        if (config.apiKey) headers['Authorization'] = `Bearer ${config.apiKey}`;
+        // Only add Authorization if apiKey exists AND we are NOT using Ollama (which doesn't need it)
+        if (config.apiKey && config.providerPreset !== 'ollama') {
+          headers['Authorization'] = `Bearer ${config.apiKey}`;
+        }
 
         body = JSON.stringify({
           model: model,

@@ -109,7 +109,7 @@ async function processCurrentTab() {
 
     // Load complete config
     const config = await chrome.storage.local.get([
-      'apiKey', 'baseUrl', 'modelName', 'targetLanguage'
+      'apiKey', 'baseUrl', 'modelName', 'targetLanguage', 'providerPreset'
     ]);
 
     if (!config.baseUrl) throw new Error("Base URL is required.");
