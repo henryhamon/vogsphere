@@ -119,17 +119,43 @@ export const Agents = {
       headers['anthropic-version'] = '2023-06-01';
 
     } else {
-      // Standard OpenAI / Ollama / Gemini / Grok
-      // Normalize URL to /chat/completions if not present
+      // Standard OpenAI / Ollama / Gemini / Grok / Custom
       baseUrl = baseUrl.replace(/\/+$/, '');
-      if (!baseUrl.includes('/chat/completions')) {
-        // If it's just the root (e.g. https://api.openai.com/v1), add endpoint
-        if (!baseUrl.includes('/v1') && provider !== 'ollama') baseUrl += '/v1'; // Ollama often has v1 included or not
 
-        // For Ollama, often http://localhost:11434/v1/chat/completions
-        url = `${baseUrl}/chat/completions`;
+      if (provider === 'custom') {
+        // Trust the user input for custom providers.
+        if (baseUrl.endsWith('/v1') && !baseUrl.includes('chat')) {
+          url = `${baseUrl}/chat/completions`;
+        } else if (!baseUrl.includes('/') || (new URL(baseUrl).pathname === '/')) {
+          // Bare domain logic
+          try {
+            const u = new URL(baseUrl);
+            if (u.pathname === '/' || u.pathname === '') {
+              url = `${baseUrl}/v1/chat/completions`;
+            } else {
+              url = baseUrl;
+            }
+          } catch (e) {
+            url = baseUrl;
+          }
+        } else {
+          url = baseUrl;
+        }
       } else {
-        url = baseUrl;
+        // Standard Providers Logic (Aggressive auto-correction)
+        if (!baseUrl.includes('/chat/completions')) {
+          if (provider === 'ollama') {
+            if (!baseUrl.endsWith('/v1')) {
+              baseUrl += '/v1';
+            }
+            url = `${baseUrl}/chat/completions`;
+          } else {
+            if (!baseUrl.includes('/v1')) baseUrl += '/v1';
+            url = `${baseUrl}/chat/completions`;
+          }
+        } else {
+          url = baseUrl;
+        }
       }
 
       // Auth Header (Skip for Ollama if key is empty)

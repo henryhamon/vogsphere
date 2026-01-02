@@ -244,7 +244,8 @@ function attachEventListeners() {
   // Save Button
   document.getElementById('saveProfile').addEventListener('click', () => {
     saveCurrentProfileFromForm();
-    document.getElementById('settingsPanel').classList.add('hidden');
+    // UX Improvement: Keep panel open so user can immediately process or tweak further.
+    // document.getElementById('settingsPanel').classList.add('hidden');
   });
 
   // Process Logic & Copy/Download (Same as before)
@@ -271,9 +272,8 @@ async function processCurrentTab() {
   const resultArea = document.getElementById('resultArea');
 
   try {
-    const profile = getActiveProfile();
-    // Validate Current Profile
-    if (!profile) throw new Error("No active profile found.");
+    // FIX: Read directly from DOM to support WYSIWYG (unsaved changes)
+    const profile = getTransientProfileFromDOM();
 
     // Specific validations
     if (profile.provider === 'azure') {
@@ -324,4 +324,24 @@ async function processCurrentTab() {
     statusDiv.innerText = `Error: ${error.message}`;
     console.error(error);
   }
+}
+
+/**
+ * Constructs a temporary profile object from current DOM values.
+ * This ensures "What You See Is What You Get" even if changes aren't saved.
+ */
+function getTransientProfileFromDOM() {
+  return {
+    id: activeProfileId,
+    name: document.getElementById('profileName').value || "Unsaved Profile",
+    provider: document.getElementById('provider').value,
+    fields: {
+      baseUrl: document.getElementById('baseUrl').value,
+      apiKey: document.getElementById('apiKey').value,
+      model: document.getElementById('modelName').value,
+      deployment: document.getElementById('deploymentName').value,
+      apiVersion: document.getElementById('apiVersion').value,
+    },
+    language: document.getElementById('targetLanguage').value
+  };
 }

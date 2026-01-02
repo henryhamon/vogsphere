@@ -88,6 +88,9 @@ The settings form adjusts dynamically based on your specific provider:
 | **Ollama** | Base URL, Model | `http://localhost:11434/v1` |
 | **Gemini** | API Key, Model | `https://generativelanguage.googleapis.../openai` |
 | **Anthropic** | API Key, Model | `https://api.anthropic.com/v1/messages` |
+| **Custom** | Base URL, Model, Key | Flexible (e.g. `https://my-api.com/v1` or full path) |
+
+> **Tip:** You can edit settings and click "Process" immediately to test changes. Saving is only required to persist the profile for later.
 
 ### 3. Agent Preferences
 
