@@ -1,4 +1,4 @@
-/* Add inside sidepanel.css */
+/* Basic Sidepanel Styling */
 .settings-header {
   font-size: 0.9rem;
   color: #00ff9d;
@@ -34,7 +34,7 @@ h1 {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 input,
@@ -95,4 +95,44 @@ button:hover {
   display: flex;
   gap: 10px;
   margin-top: 10px;
+}
+
+/* Profile Management Styles */
+.profile-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  /* Align items vertically centered */
+  margin-bottom: 10px;
+}
+
+#profileSelector {
+  flex-grow: 1;
+  /* Select takes available space */
+  margin-bottom: 0 !important;
+  /* Remove bottom margin to align with buttons */
+}
+
+.profile-actions {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+  /* Don't shrink buttons */
+}
+
+.profile-actions button {
+  width: 40px;
+  /* Fixed width for icon buttons */
+  padding: 8px 0;
+  text-align: center;
+  margin: 0;
+}
+
+button.danger {
+  background-color: #ff4444;
+  color: white;
+}
+
+button.danger:hover {
+  background-color: #cc0000;
 }

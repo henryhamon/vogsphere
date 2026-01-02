@@ -27,6 +27,17 @@ const AGENT_DIRECTIVES = {
     `,
 
   /**
+   * Research Specialist Agent: Focuses on deep academic synthesis.
+   */
+  research_specialist: (language) => `
+    [AGENT: RESEARCH SPECIALIST]
+    Task: Act as an academic research specialist. Prepare an article that synthesizes the main ideas and findings, raises questions, presents evidence, methodologies, results, and implications of the study.
+    Requirement: Include key terms and conecpts, as well as provide the necessary context or background information.
+    Constraint: The article should function as a standalone text, offering readers a comprehensive understanding of the study’s importance without requiring them to read the full document.
+    Output Language: ${language}.
+    `,
+
+  /**
    * Zettelkasten Agent: Focuses on atomicity and modular knowledge.
    */
   zettelkasten: (language) => `
@@ -52,27 +63,74 @@ const AGENT_DIRECTIVES = {
 export const Agents = {
   // System Prompt: Defines the overarching persona and output format rules
   systemPrompt: `You are Vogsphere, a distributed bureaucratic intelligence running inside a browser. 
-    You manage a team of cognitive sub-agents (Summarizer, Insight, Zettelkasten, Librarian).
+    You manage a team of cognitive sub-agents (Summarizer, Insight, Zettelkasten, Librarian, Research Specialist).
     Your goal is to orchestrate their outputs into a single, perfectly formatted Markdown document.
     Do not add conversational filler. Output ONLY the final Markdown.`,
 
   /**
    * Orchestrates the agents to process the content.
    */
-  async runProcessing(content, config) {
-    // Defaults
-    const model = config.modelName || 'gpt-4o-mini';
-    const language = config.targetLanguage || 'English';
+  async runProcessing(content, profile) {
+    // Extract Configuration
+    const { fields, provider, language } = profile;
+    const model = fields.model || 'gpt-4o-mini';
 
-    // Prepare API URL
-    let baseUrl = config.baseUrl.replace(/\/+$/, '');
-    if (!baseUrl.includes('/chat/completions')) {
-      if (!baseUrl.includes('/v1')) baseUrl += '/v1';
-      baseUrl += '/chat/completions';
+    // Config Extraction
+    let baseUrl = fields.baseUrl || '';
+    let apiKey = fields.apiKey || '';
+
+    // Azure Specifics
+    const deployment = fields.deployment;
+    const apiVersion = fields.apiVersion;
+
+    // URL Construction & Header Preparation
+    let url = '';
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    if (provider === 'azure') {
+      // Azure OpenAI Construction
+      // Expected Base URL: https://{resource}.openai.azure.com/
+      // Target: https://{resource}.openai.azure.com/openai/deployments/{deployment}/chat/completions?api-version={apiVersion}
+
+      // Clean trailing slash
+      baseUrl = baseUrl.replace(/\/+$/, '');
+      if (!baseUrl.startsWith('http')) {
+        // Assume user provided resource name only
+        baseUrl = `https://${baseUrl}.openai.azure.com`;
+      }
+
+      url = `${baseUrl}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
+      headers['api-key'] = apiKey;
+
+    } else if (provider === 'claude') {
+      // Anthropic
+      url = baseUrl; // usually https://api.anthropic.com/v1/messages
+      headers['x-api-key'] = apiKey;
+      headers['anthropic-version'] = '2023-06-01';
+
+    } else {
+      // Standard OpenAI / Ollama / Gemini / Grok
+      // Normalize URL to /chat/completions if not present
+      baseUrl = baseUrl.replace(/\/+$/, '');
+      if (!baseUrl.includes('/chat/completions')) {
+        // If it's just the root (e.g. https://api.openai.com/v1), add endpoint
+        if (!baseUrl.includes('/v1') && provider !== 'ollama') baseUrl += '/v1'; // Ollama often has v1 included or not
+
+        // For Ollama, often http://localhost:11434/v1/chat/completions
+        url = `${baseUrl}/chat/completions`;
+      } else {
+        url = baseUrl;
+      }
+
+      // Auth Header (Skip for Ollama if key is empty)
+      if (apiKey) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
+      }
     }
 
     // 2. Assembly of the Composite Prompt
-    // We inject the specific instructions for each agent here.
     const prompt = `
         SOURCE MATERIAL:
         Title: ${content.title}
@@ -86,6 +144,8 @@ export const Agents = {
         ${AGENT_DIRECTIVES.summarizer(language)}
         
         ${AGENT_DIRECTIVES.insight(language)}
+
+        ${AGENT_DIRECTIVES.research_specialist(language)}
         
         ${AGENT_DIRECTIVES.zettelkasten(language)}
         
@@ -101,6 +161,9 @@ export const Agents = {
         
         ## Executive Summary
         {Output from Summarizer Agent}
+
+        ## Comprehensive Research Analysis
+        {Output from Research Specialist Agent}
         
         ## Atomic Concepts (Zettelkasten)
         {Output from Zettelkasten Agent}
@@ -113,18 +176,11 @@ export const Agents = {
 
     // 3. API Execution
     try {
-      console.log(`[Vogsphere] Connecting to: ${baseUrl} with model: ${model}`);
+      console.log(`[Vogsphere] Connecting to: ${url} (Provider: ${provider})`);
 
-      let body, method = 'POST';
-      const headers = {
-        'Content-Type': 'application/json'
-      };
+      let body;
 
-      if (config.providerPreset === 'claude') {
-        // Anthropic Adapter
-        headers['x-api-key'] = config.apiKey;
-        headers['anthropic-version'] = '2023-06-01';
-
+      if (provider === 'claude') {
         body = JSON.stringify({
           model: model,
           system: this.systemPrompt,
@@ -133,12 +189,7 @@ export const Agents = {
           temperature: 0.3
         });
       } else {
-        // Standard OpenAI / Ollama Adapter
-        // Only add Authorization if apiKey exists AND we are NOT using Ollama (which doesn't need it)
-        if (config.apiKey && config.providerPreset !== 'ollama') {
-          headers['Authorization'] = `Bearer ${config.apiKey}`;
-        }
-
+        // Standard Body
         body = JSON.stringify({
           model: model,
           messages: [
@@ -150,8 +201,8 @@ export const Agents = {
         });
       }
 
-      const response = await fetch(baseUrl, {
-        method: method,
+      const response = await fetch(url, {
+        method: 'POST',
         headers: headers,
         body: body
       });
@@ -168,15 +219,10 @@ export const Agents = {
 
       const data = await response.json();
 
-      // Handle standard OpenAI format or Ollama/LiteLLM variations
-      // Handle standard OpenAI format or Ollama/LiteLLM variations
+      // Handle Response Formats
       if (data.choices && data.choices.length > 0) return data.choices[0].message.content;
-      if (data.message) return data.message.content;
-
-      // Handle Anthropic Format
-      if (data.content && Array.isArray(data.content) && data.content.length > 0) {
-        return data.content[0].text;
-      }
+      if (data.message) return data.message.content; // Ollama common
+      if (data.content && Array.isArray(data.content)) return data.content[0].text; // Anthropic
 
       throw new Error("Invalid response structure from provider.");
 

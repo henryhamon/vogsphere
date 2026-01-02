@@ -10,16 +10,31 @@
 <body>
   <div class="container">
     <header>
-      <h1>VOGSPHERE <span style="font-size:0.6em">V.1.1</span></h1>
+      <h1>VOGSPHERE <span style="font-size:0.6em">V.1.2</span></h1>
       <div class="settings-toggle" id="btnSettings" title="Configuration">⚙️</div>
     </header>
 
     <div id="settingsPanel" class="hidden">
+      <!-- Profile Management Area -->
+      <h3 class="settings-header">Profile Management</h3>
+      <div class="profile-controls">
+        <select id="profileSelector"></select>
+        <div class="profile-actions">
+          <button id="btnNewProfile" title="New Profile">+</button>
+          <button id="btnDeleteProfile" title="Delete Profile" class="danger">-</button>
+        </div>
+      </div>
+
+      <label>Profile Name:</label>
+      <input type="text" id="profileName">
+
+      <!-- Connection Settings & Dynamic Wrappers -->
       <h3 class="settings-header">Connection Settings</h3>
 
-      <label>Provider Template:</label>
-      <select id="providerPreset">
+      <label>Provider:</label>
+      <select id="provider">
         <option value="openai">OpenAI</option>
+        <option value="azure">Azure OpenAI</option>
         <option value="ollama">Ollama (Local)</option>
         <option value="gemini">Google Gemini</option>
         <option value="grok">xAI Grok</option>
@@ -27,14 +42,30 @@
         <option value="custom">Custom Endpoint</option>
       </select>
 
-      <label>Base URL:</label>
-      <input type="text" id="baseUrl" placeholder="https://api.openai.com/v1">
+      <div id="fieldBaseUrl">
+        <label>Base URL / Endpoint:</label>
+        <input type="text" id="baseUrl" placeholder="https://api.openai.com/v1">
+      </div>
 
-      <label>Model Name:</label>
-      <input type="text" id="modelName" placeholder="gpt-4o-mini">
+      <div id="fieldDeployment">
+        <label>Deployment Name (Azure):</label>
+        <input type="text" id="deploymentName" placeholder="my-gpt4-deployment">
+      </div>
 
-      <label>API Key:</label>
-      <input type="password" id="apiKey" placeholder="sk-...">
+      <div id="fieldApiVersion">
+        <label>API Version (Azure):</label>
+        <input type="text" id="apiVersion" placeholder="2023-05-15">
+      </div>
+
+      <div id="fieldModel">
+        <label>Model Name:</label>
+        <input type="text" id="modelName" placeholder="gpt-4o-mini">
+      </div>
+
+      <div id="fieldApiKey">
+        <label>API Key:</label>
+        <input type="password" id="apiKey" placeholder="sk-...">
+      </div>
 
       <h3 class="settings-header">Agent Preferences</h3>
 
@@ -49,15 +80,17 @@
         <option value="Japanese">Japanese</option>
       </select>
 
-      <button id="saveSettings" class="primary-btn">Save Configuration</button>
+      <button id="saveProfile" class="primary-btn">Save Profile</button>
     </div>
 
+    <!-- Actions Area -->
     <div class="actions">
       <button id="btnProcess" class="primary-btn">PROCESS CURRENT PAGE</button>
     </div>
 
     <div id="status" class="status">Waiting for input...</div>
 
+    <!-- Result Area -->
     <div id="resultArea" class="hidden">
       <textarea id="markdownOutput" readonly></textarea>
       <div class="button-group">

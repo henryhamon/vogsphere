@@ -10,15 +10,17 @@ Designed for users of **Gemini**, **Claude**, **Grok**, **Ollama**, and **OpenAI
 
 * **Side Panel Interface**: Stays open while you browse, allowing for continuous research without context switching.
 * **Distraction-Free Extraction**: Uses a custom implementation of Mozilla's `Readability.js` to strip ads, popups, and clutter.
+* **Multi-Profile Management**: Create, save, and switch between multiple configuration profiles (e.g., "Work - Azure", "Personal - Ollama").
 * **Universal LLM Support**:
-* 🏠 **Local**: Connect to **Ollama** directly.
-* 🌐 **Cloud**: Native support for **OpenAI**, **Gemini**, **Claude**, and **Grok**.
+    * 🏠 **Local**: Connect to **Ollama** directly.
+    * 🌐 **Cloud**: Native support for **Azure OpenAI**, **OpenAI**, **Gemini**, **Claude**, and **Grok**.
 
-* **Multi-Agent Architecture**: Four specialized "cognitive agents" run in parallel to process information:
-1. **Summarizer Agent**: Generates accessible academic abstracts.
-2. **Insight Agent**: Extracts the single "Canonical Insight" and nuances.
-3. **Zettelkasten Agent**: Atomizes concepts for modular knowledge.
-4. **Librarian Agent**: Handles taxonomy, tagging, and filename generation.
+* **Multi-Agent Architecture**: Five specialized "cognitive agents" run in parallel to process information:
+    1. **Summarizer Agent**: Generates accessible academic abstracts.
+    2. **Insight Agent**: Extracts the single "Canonical Insight" and nuances.
+    3. **Research Specialist**: Produces a standalone, deep-dive academic article.
+    4. **Zettelkasten Agent**: Atomizes concepts for modular knowledge.
+    5. **Librarian Agent**: Handles taxonomy, tagging, and filename generation.
 
 
 * **Polyglot Output**: Configure the agents to write notes in English, Portuguese, Spanish, German, etc., regardless of the source text language.
@@ -69,21 +71,25 @@ Due to licensing and modularity, `Readability.js` is not bundled. You must downl
 
 ## ⚙️ Configuration
 
-Click the Vogsphere icon in your browser toolbar to open the Side Panel. Click the **⚙️ Settings** icon.
+### 1. Profile Management
+Vogsphere now supports multiple profiles. Use the top bar to:
+* **Select**: Switch between saved configurations.
+* **+ (New)**: Create a new profile (starts with OpenAI defaults).
+* **- (Delete)**: Remove the current profile.
+* **Save**: Persist your changes to the active profile.
 
-### 1. Connection Presets
+### 2. Provider Settings
+The settings form adjusts dynamically based on your specific provider:
 
-| Provider | Base URL | Model Example |
+| Provider | Required Fields | URL Pattern (Auto-Generated) |
 | --- | --- | --- |
-| **OpenAI** | `https://api.openai.com/v1` | `gpt-4o-mini` |
-| **Ollama** | `http://localhost:11434/v1` | `llama3`, `mistral` |
-| **Google Gemini** | `https://generativelanguage.googleapis.../openai` | `gemini-1.5-flash` |
-| **Anthropic Claude** | `https://api.anthropic.com/v1/messages` | `claude-3-5-sonnet` |
-| **xAI Grok** | `https://api.x.ai/v1` | `grok-beta` |
+| **OpenAI** | API Key, Model | `https://api.openai.com/v1` |
+| **Azure OpenAI** | Endpoint, Deployment, API Version, Key | `https://{resource}.openai.azure.com/...` |
+| **Ollama** | Base URL, Model | `http://localhost:11434/v1` |
+| **Gemini** | API Key, Model | `https://generativelanguage.googleapis.../openai` |
+| **Anthropic** | API Key, Model | `https://api.anthropic.com/v1/messages` |
 
-*Note: If using Ollama, ensure you have run `ollama serve` and configured CORS if necessary.*
-
-### 2. Agent Preferences
+### 3. Agent Preferences
 
 * **Output Language**: Select the language you want your notes to be written in (e.g., Portuguese). The agents will translate and adapt the analysis automatically.
 
@@ -92,7 +98,7 @@ Click the Vogsphere icon in your browser toolbar to open the Side Panel. Click t
 Vogsphere doesn't just "summarize". It passes the content through a prompt chain defined in `src/agents.js`:
 
 1. **Extraction**: `content.js` cleans the DOM.
-2. **Directives**: The system constructs a composite prompt containing instructions for all 4 agents.
+2. **Directives**: The system constructs a composite prompt containing instructions for all 5 agents.
 3. **Processing**: The LLM processes the directives in a single pass (to save latency/tokens).
 4. **Formatting**: The result is returned as a Markdown block ready to be pasted into Obsidian.
 
@@ -105,6 +111,11 @@ Vogsphere doesn't just "summarize". It passes the content through a prompt chain
 
 ## Executive Summary
 This article argues that Large Language Models are transitioning into operating systems for autonomous agents. It highlights that current architectures are limited by context windows, but new memory frameworks allow for persistent tasks.
+
+## Comprehensive Research Analysis
+**The Evolution of Agentic Systems**
+
+The study posits a fundamental shift in AI interaction paradigms... [Deep dive content] ... The methodology employed involves a comparative analysis of zero-shot performance versus chain-of-thought prompting in agentic frameworks.
 
 ## Atomic Concepts (Zettelkasten)
 - Agentic workflows reduce human-in-the-loop latency.

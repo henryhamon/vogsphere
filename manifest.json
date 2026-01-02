@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Vogsphere: The Bureaucratic Second Brain",
-  "version": "1.0",
+  "version": "1.2",
   "description": "Extracts web content, executes LLM agents, and generates strict Zettelkasten notes for Obsidian.",
   "permissions": [
     "sidePanel",
