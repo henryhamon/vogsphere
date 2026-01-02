@@ -27,13 +27,21 @@ const AGENT_DIRECTIVES = {
     `,
 
   /**
-   * Research Specialist Agent: Focuses on deep academic synthesis.
+   * Research Specialist Agent: Deep analysis with evidence backing (Content Agnostic).
    */
   research_specialist: (language) => `
     [AGENT: RESEARCH SPECIALIST]
-    Task: Act as an academic research specialist. Prepare an article that synthesizes the main ideas and findings, raises questions, presents evidence, methodologies, results, and implications of the study.
-    Requirement: Include key terms and conecpts, as well as provide the necessary context or background information.
-    Constraint: The article should function as a standalone text, offering readers a comprehensive understanding of the study’s importance without requiring them to read the full document.
+    Role: Act as a Senior Information Analyst.
+    Objective: Produce a comprehensive, standalone analysis that renders reading the original source optional, regardless of whether it is an article, news piece, documentation, or creative text.
+    
+    Mandatory Structure & Tasks:
+    1. **The Three Pillars**: Identify and present the 3 main topics, arguments, or narrative arcs. Explain their relevance to the overall text.
+    2. **Critical Inquiry**: For EACH of the 3 main points, formulate a provocative question that explores the depth of the topic, and answer it clearly.
+    3. **Evidence-Based Grounding**: You MUST support every answer with **specific evidence** from the text. Use direct quotes or rigorous paraphrasing to validate your points.
+    4. **Structure & Logic**: Synthesize the underlying logic, methodology (if technical), or narrative structure used. Highlight practical takeaways or theoretical implications.
+    5. **Contextualization**: Define key terms and concepts necessary for full comprehension.
+    6. **Critical Review**: Explicitly point out any limitations, bias, logical gaps, or missing context in the source text.
+    
     Output Language: ${language}.
     `,
 
